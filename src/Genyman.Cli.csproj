@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<IsPackable>true</IsPackable>
+		<PackAsTool>true</PackAsTool>
+		<ToolCommandName>genyman</ToolCommandName>
+		<TargetFramework>netcoreapp2.1</TargetFramework>
+		<AssemblyName>Genyman</AssemblyName>
+		<Version>0.0.2</Version>
+		<Description>Genyman CLI - Code Generator Tool</Description>
+		<PackageTags>Genyman</PackageTags>
+		<IncludeContentInPack>false</IncludeContentInPack>
+		<PackageIconUrl>https://raw.githubusercontent.com/genyman/genyman/master/graphics/genyman64.png</PackageIconUrl>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Remove="Templates\**" />
+		<Content Include="Templates\**">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Folder Include="Helpers" />
+		<Folder Include="Templates" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Genyman.Core" Version="0.0.4" />
+	</ItemGroup>
+</Project>
