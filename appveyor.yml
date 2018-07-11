@@ -9,7 +9,7 @@ skip_tags: true
 image: Visual Studio 2017  
 dotnet_csproj:
   patch: true
-  file: '**\*.csproj'
+  file: 'src\Genyman.Cli.csproj'
   version: '{version}'
 environment:
   nuget_apikey:
