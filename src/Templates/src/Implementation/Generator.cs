@@ -1,6 +1,6 @@
 ﻿using Genyman.Core;
 
-namespace {{ Prefix }}.Genyman.{{ ToolName }}.Implementation;
+namespace {{ SafePrefix }}.Genyman.{{ SafeToolName }}.Implementation
 {
 	public class Generator : GenymanGenerator<Configuration>
 	{

@@ -3,9 +3,9 @@
 		<OutputType>Exe</OutputType>
 		<IsPackable>true</IsPackable>
 		<PackAsTool>true</PackAsTool>
-		<ToolCommandName>{{ Prefix }}-Genyman-{{ ToolName }}</ToolCommandName>
+		<ToolCommandName>{{ SafePrefix }}-Genyman-{{ SafeToolName }}</ToolCommandName>
 		<TargetFramework>netcoreapp2.1</TargetFramework>
-		<AssemblyName>{{ Prefix }}.Genyman.{{ ToolName }}</AssemblyName>
+		<AssemblyName>{{ SafePrefix }}.Genyman.{{ SafeToolName }}</AssemblyName>
 		<Version>1.0.0</Version>
 		<Description>{{ Description }}</Description>
 		<PackageTags>Genyman</PackageTags>
