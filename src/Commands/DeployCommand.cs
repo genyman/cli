@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Genyman.Core;
 using Genyman.Core.Commands;
 using Genyman.Core.Helpers;
@@ -29,7 +30,13 @@ namespace Genyman.Cli.Commands
 
 			// Finding dotnet cli
 
-			var dotnet = DotNetExe.FullPath;
+			string dotnet;
+			
+			if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
+				dotnet = "/usr/local/share/dotnet/dotnet"; //temp untill we know how to get this
+			else
+				dotnet = DotNetExe.FullPath;
+			
 			if (dotnet.IsNullOrEmpty())
 			{
 				Log.Fatal($"Could not find dotnet cli");
