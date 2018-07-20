@@ -1,7 +1,7 @@
-﻿using {{ Prefix }}.Genyman.{{ ToolName }}.Implementation;
+﻿using {{ SafePrefix }}.Genyman.{{ SafeToolName }}.Implementation;
 using Genyman.Core;
 
-namespace {{ Prefix }}.Genyman.{{ ToolName }}
+namespace {{ SafePrefix }}.Genyman.{{ SafeToolName }}
 {
 	internal class Program
 	{

@@ -1,4 +1,4 @@
-﻿namespace {{ Prefix }}.Genyman.{{ ToolName }}.Implementation;
+﻿namespace {{ SafePrefix }}.Genyman.{{ SafeToolName }}.Implementation
 {
 	public class NewTemplate : Configuration
 	{

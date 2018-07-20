@@ -6,6 +6,7 @@
 		{
 			Prefix = "YourPrefix";
 			ToolName = "YourToolName";
+			Description = "Another great Genyman generator!";
 		}
 	}
 }

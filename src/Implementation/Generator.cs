@@ -28,7 +28,7 @@ namespace Genyman.Cli.Implementation
 
 		void CreateTemplate()
 		{
-			Log.Information($"Generating a new configuration file for {Metadata.PackageId}");
+			Log.Information($"Generating a new genyman generator solution");
 			ProcessHandlebarTemplates();
 		}
 	}
