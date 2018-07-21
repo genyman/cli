@@ -23,7 +23,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Genyman.Core" Version="0.0.6" />
+	  <PackageReference Include="Genyman.Core" Version="0.0.7" />
 	</ItemGroup>
 
 </Project>
