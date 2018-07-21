@@ -30,12 +30,7 @@ namespace Genyman.Cli.Commands
 
 			// Finding dotnet cli
 
-			string dotnet;
-			
-			if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
-				dotnet = "/usr/local/share/dotnet/dotnet"; //temp untill we know how to get this
-			else
-				dotnet = DotNetExe.FullPath;
+			var dotnet = DotNetExe.FullPathOrDefault();
 			
 			if (dotnet.IsNullOrEmpty())
 			{
