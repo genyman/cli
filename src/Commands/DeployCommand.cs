@@ -16,13 +16,13 @@ namespace Genyman.Cli.Commands
 		{
 			Name = "deploy";
 			Description = "Deploys the generator";
-			SourceOption = Option("--source", "Deploys to custom nuget server", CommandOptionType.SingleOrNoValue, option => { }, false);
-			SourceOption = Option("--apikey", "Use ApiKey to deploy to nuget server", CommandOptionType.SingleOrNoValue, option => { }, false);
+			SourceOption = Option("--source", "Deploys to custom nuget server", CommandOptionType.SingleValue, option => { }, false);
+			ApiKeyOption = Option("--apikey", "Use ApiKey to deploy to nuget server", CommandOptionType.SingleValue, option => { }, false);
+			
 		}
 
 		public CommandOption SourceOption { get; }
 		public CommandOption ApiKeyOption { get; }
-
 
 		protected override int Execute()
 		{
@@ -76,6 +76,10 @@ namespace Genyman.Cli.Commands
 			{
 				if (string.IsNullOrEmpty(SourceOption.Value())) Log.Fatal("When specifying --source your need to add a valid source (--source=https://{YourUrl})");
 				push.WithArgument("--source", SourceOption.Value());
+			}
+			else
+			{
+				push.WithArgument("--source", "https://api.nuget.org/v3/index.json");
 			}
 
 			if (ApiKeyOption.HasValue())

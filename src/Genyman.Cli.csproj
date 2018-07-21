@@ -6,7 +6,7 @@
 		<ToolCommandName>genyman</ToolCommandName>
 		<TargetFramework>netcoreapp2.1</TargetFramework>
 		<AssemblyName>Genyman</AssemblyName>
-		<Version>0.0.2</Version>
+		<Version>0.0.9</Version>
 		<Description>Genyman CLI - Code Generator Tool</Description>
 		<PackageTags>Genyman</PackageTags>
 		<IncludeContentInPack>false</IncludeContentInPack>
