@@ -30,6 +30,12 @@ namespace Genyman.Cli.Implementation
 					generator.InputFileName = InputFileName;
 					generator.PackageId = resolvePackageResult.packageId;
 					generator.Execute(Args);
+
+					// in case a specific version was requested, install latest again
+					if (!string.IsNullOrEmpty(ConfigurationMetadata.Version))
+					{
+						DotNetHelper.ResolvePackage(packageId, ConfigurationMetadata.NugetSource, true, null);
+					}
 				}
 			}
 		}
