@@ -18,12 +18,16 @@
 		<Content Include="Templates\**">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
-		<Folder Include="Helpers" />
+		<Folder Include="Helpers\Microsoft.DotNet" />
 		<Folder Include="Templates" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <PackageReference Include="Genyman.Core" Version="0.0.7" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\core\src\Genyman.Core.csproj" />
 	</ItemGroup>
 
 </Project>

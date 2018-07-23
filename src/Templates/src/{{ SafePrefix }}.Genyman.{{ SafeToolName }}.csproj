@@ -3,7 +3,6 @@
 		<OutputType>Exe</OutputType>
 		<IsPackable>true</IsPackable>
 		<PackAsTool>true</PackAsTool>
-		<ToolCommandName>{{ lower SafePrefix }}.genyman.{{ lower SafeToolName }}</ToolCommandName>
 		<TargetFramework>netcoreapp2.1</TargetFramework>
 		<AssemblyName>{{ SafePrefix }}.Genyman.{{ SafeToolName }}</AssemblyName>
 		<Version>1.0.0</Version>
