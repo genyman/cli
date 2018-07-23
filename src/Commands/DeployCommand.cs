@@ -61,7 +61,9 @@ namespace Genyman.Cli.Commands
 
 			if (nugetPush == 0)
 			{
+				Log.Information("Package was pushed");
 				DotNetHelper.InstallOrUpdateLocal(nupkgFile, tempFolder);
+				Log.Information("Genyman generator was installed locally");
 			}
 			else
 			{
