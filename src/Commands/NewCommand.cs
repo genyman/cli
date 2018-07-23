@@ -22,7 +22,7 @@ namespace Genyman.Cli.Commands
 		protected override int Execute()
 		{
 			var packageId = PackageIdArgument.ParsedValue;
-			var resolvePackageResult = DotNetHelper.ResolvePackage(packageId, SourceOption.ParsedValue, UpdateOption.HasValue());
+			var resolvePackageResult = DotNetHelper.ResolvePackage(packageId, SourceOption.ParsedValue, UpdateOption.HasValue(), string.Empty);
 
 			if (resolvePackageResult.success)
 			{
@@ -36,8 +36,7 @@ namespace Genyman.Cli.Commands
 					if (option.HasValue())
 						run.WithArgument("--" + option.LongName, option.Value());
 
-
-				return run.Execute();
+				return run.Execute(false);
 			}
 
 			Log.Error("Could not execute new command for this packageId.");

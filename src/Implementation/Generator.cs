@@ -1,10 +1,16 @@
 ﻿using System.IO;
+using Genyman.Cli.Helpers;
 using Genyman.Core;
+using Genyman.Core.Commands;
+using Genyman.Core.Helpers;
+using McMaster.Extensions.CommandLineUtils;
 
 namespace Genyman.Cli.Implementation
 {
 	public class Generator : GenymanGenerator<Configuration>
 	{
+		internal static string[] Args { get; set; }
+
 		public override void Execute()
 		{
 			if (ConfigurationMetadata.PackageId == Metadata.PackageId)
@@ -15,20 +21,40 @@ namespace Genyman.Cli.Implementation
 			}
 			else
 			{
-				
-				// todo:
-				// - try to resolve packageId
-				// - execute package id with same json file
-				
-				// determine if the INPUT is
-				// - filename = config file
-				// - packageId (with new?)
-				
-				// add some extra options here?
-				// genyman packageId (of is dit gelijk aan NEW?)
-				// genyman packageId (--new)    --json --yaml --xaml -- FORWARD these to the packages!
+				var packageId = ConfigurationMetadata.PackageId;
+				var resolvePackageResult = DotNetHelper.ResolvePackage(packageId, ConfigurationMetadata.NugetSource, false, ConfigurationMetadata.Version);
+
+				if (resolvePackageResult.success)
+				{
+					var generator = new PackageGenerator();
+					generator.InputFileName = InputFileName;
+					generator.PackageId = resolvePackageResult.packageId;
+					generator.Execute(Args);
+				}
 			}
 		}
 
+		public class PackageGenerator : BaseCommand
+		{
+			protected override int Execute()
+			{
+				var program = PackageId;
+
+				var run = ProcessRunner.Create(program)
+					.IsGenerator()
+					.WithArgument(InputFileName);
+
+				foreach (var option in Options)
+					if (option.HasValue())
+						run.WithArgument("--" + option.LongName, option.Value());
+
+				run.Execute(false);
+
+				return 0;
+			}
+
+			public string InputFileName { get; set; }
+			public string PackageId { get; set; }
+		}
 	}
 }

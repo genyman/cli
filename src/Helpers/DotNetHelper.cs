@@ -25,13 +25,10 @@ namespace Genyman.Cli.Helpers
 				.WithArgument("-o", tempFolder)
 				.ReceiveOutput(s =>
 				{
-					if (s.Contains("Successfully"))
-
-						Log.Information("Packing was successfull");
-
+					Log.Debug(s);
 					return true;
 				})
-				.Execute();
+				.Execute(true);
 		}
 
 		internal static int NugetPush(string nugetPackage, string nugetSource = null, string nugetApiKey = null)
@@ -50,11 +47,10 @@ namespace Genyman.Cli.Helpers
 
 			push.ReceiveOutput(s =>
 			{
-				if (s.Contains("Your package was pushed")) //todo: is this OK? what about localization?
-					Log.Information("Push successfull");
+				Log.Debug(s);
 				return true;
 			});
-			return push.Execute();
+			return push.Execute(true);
 		}
 
 		internal static void InstallOrUpdateLocal(string nupkgFile, string tempFolder)
@@ -71,10 +67,10 @@ namespace Genyman.Cli.Helpers
 					.WithArgument(packageId)
 					.ReceiveOutput(s =>
 					{
-						Log.Information(s);
+						Log.Debug(s);
 						return true;
 					})
-					.Execute();
+					.Execute(true);
 			else
 				ProcessRunner.Create(DotnetCommand)
 					.WithArgument("tool")
@@ -85,13 +81,13 @@ namespace Genyman.Cli.Helpers
 					.WithArgument("--version", version)
 					.ReceiveOutput(s =>
 					{
-						Log.Information(s);
+						Log.Debug(s);
 						return true;
 					})
-					.Execute();
+					.Execute(true);
 		}
 
-		internal static bool Install(string packageId, string source)
+		internal static bool Install(string packageId, string source, string version)
 		{
 			var install = ProcessRunner.Create(DotnetCommand)
 				.WithArgument("tool")
@@ -100,14 +96,17 @@ namespace Genyman.Cli.Helpers
 				.WithArgument(packageId)
 				.ReceiveOutput(s =>
 				{
-					Log.Information(s);
+					Log.Debug(s);
 					return true;
 				});
 
 			if (!string.IsNullOrEmpty(source))
 				install.WithArgument("--add-source", source);
 
-			var exitCode = install.Execute();
+			if (!string.IsNullOrEmpty(version))
+				install.WithArgument("--version", version);
+
+			var exitCode = install.Execute(true);
 			return exitCode == 0;
 		}
 
@@ -120,18 +119,34 @@ namespace Genyman.Cli.Helpers
 				.WithArgument(packageId)
 				.ReceiveOutput(s =>
 				{
-					Log.Information(s);
+					Log.Debug(s);
 					return true;
 				});
 
 			if (!string.IsNullOrEmpty(source))
 				update.WithArgument("--add-source", source);
 
-			var exitCode = update.Execute();
+			var exitCode = update.Execute(true);
 			return exitCode == 0;
 		}
-		
-		internal static (bool success, string packageId) ResolvePackage(string packageId, string source, bool autoUpdate)
+
+		internal static bool UnInstall(string packageId)
+		{
+			var install = ProcessRunner.Create(DotnetCommand)
+				.WithArgument("tool")
+				.WithArgument("uninstall")
+				.WithArgument("-g")
+				.WithArgument(packageId)
+				.ReceiveOutput(s =>
+				{
+					Log.Debug(s);
+					return true;
+				});
+			var exitCode = install.Execute(true);
+			return exitCode == 0;
+		}
+
+		internal static (bool success, string packageId) ResolvePackage(string packageId, string source, bool autoUpdate, string specificVersion)
 		{
 			var isFullPackageId = true;
 
@@ -154,7 +169,7 @@ namespace Genyman.Cli.Helpers
 					}
 				}
 
-				canContinue = DotNetHelper.Install(packageId, source);
+				canContinue = DotNetHelper.Install(packageId, source, null);
 			}
 			else
 			{
@@ -163,8 +178,16 @@ namespace Genyman.Cli.Helpers
 				packageId = latest.packageId; // always get full packageId here
 
 				canContinue = latest.success;
-				if (canContinue && isFullPackageId && autoUpdate) 
+
+				if (canContinue && isFullPackageId && autoUpdate)
 					DotNetHelper.Update(packageId, source);
+
+				if (!string.IsNullOrEmpty(specificVersion) && latest.version != specificVersion)
+				{
+					// uninstall & install
+					UnInstall(packageId);
+					canContinue = DotNetHelper.Install(packageId, source, specificVersion);
+				}
 			}
 
 			return (canContinue, packageId);
