@@ -34,7 +34,7 @@ namespace Genyman.Cli.Helpers
 				.Execute();
 		}
 
-		internal static void NugetPush(string nugetPackage, string nugetSource = null, string nugetApiKey = null)
+		internal static int NugetPush(string nugetPackage, string nugetSource = null, string nugetApiKey = null)
 		{
 			var push = ProcessRunner.Create(DotnetCommand)
 				.WithArgument("nuget")
@@ -54,7 +54,7 @@ namespace Genyman.Cli.Helpers
 					Log.Information("Push successfull");
 				return true;
 			});
-			push.Execute();
+			return push.Execute();
 		}
 
 		internal static void InstallOrUpdateLocal(string nupkgFile, string tempFolder)
@@ -130,6 +130,45 @@ namespace Genyman.Cli.Helpers
 			var exitCode = update.Execute();
 			return exitCode == 0;
 		}
+		
+		internal static (bool success, string packageId) ResolvePackage(string packageId, string source, bool autoUpdate)
+		{
+			var isFullPackageId = true;
+
+			if (!packageId.ToLower().Contains(".genyman."))
+			{
+				isFullPackageId = false;
+				packageId = ".genyman." + packageId;
+			}
+
+			var local = DotNetHelper.DoesPackageExists(packageId);
+			var canContinue = false;
+
+			if (!local)
+			{
+				if (!isFullPackageId)
+				{
+					Log.Error($"Genyman package {packageId} is not installed. Auto-installation cannot be performed as {packageId} is not a fully qualified package Id.");
+					{
+						return (false, packageId);
+					}
+				}
+
+				canContinue = DotNetHelper.Install(packageId, source);
+			}
+			else
+			{
+				// perform update, we need full package name
+				var latest = DotNetHelper.GetLastestPackageVersion(packageId);
+				packageId = latest.packageId; // always get full packageId here
+
+				canContinue = latest.success;
+				if (canContinue && isFullPackageId && autoUpdate) 
+					DotNetHelper.Update(packageId, source);
+			}
+
+			return (canContinue, packageId);
+		}
 
 		internal static string GetPackageId(string nupkgFile)
 		{
@@ -167,6 +206,7 @@ namespace Genyman.Cli.Helpers
 				}
 				catch (Exception e)
 				{
+					Log.Debug(e.ToString());
 					Log.Debug($"Could not parse version for {subFolder} folder");
 				}
 

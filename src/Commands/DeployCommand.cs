@@ -57,9 +57,16 @@ namespace Genyman.Cli.Commands
 				apiKey = ApiKeyOption.ParsedValue;
 			}
 
-			DotNetHelper.NugetPush(nupkg, source, apiKey);
+			var nugetPush = DotNetHelper.NugetPush(nupkg, source, apiKey);
 
-			DotNetHelper.InstallOrUpdateLocal(nupkgFile, tempFolder);
+			if (nugetPush == 0)
+			{
+				DotNetHelper.InstallOrUpdateLocal(nupkgFile, tempFolder);
+			}
+			else
+			{
+				Log.Information("Skipping local installation of Genyman generator - Nuget Failed");
+			}
 
 			// Cleanup
 
