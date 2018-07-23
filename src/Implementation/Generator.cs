@@ -32,7 +32,7 @@ namespace Genyman.Cli.Implementation
 					generator.Execute(Args);
 
 					// in case a specific version was requested, install latest again
-					if (!string.IsNullOrEmpty(ConfigurationMetadata.Version))
+					if (resolvePackageResult.specificVersionInstalled)
 					{
 						DotNetHelper.ResolvePackage(packageId, ConfigurationMetadata.NugetSource, true, null);
 					}
@@ -50,9 +50,9 @@ namespace Genyman.Cli.Implementation
 					.IsGenerator()
 					.WithArgument(InputFileName);
 
-				foreach (var option in Options)
-					if (option.HasValue())
-						run.WithArgument("--" + option.LongName, option.Value());
+				foreach (var args in RemainingArguments)
+					if (args.StartsWith("--"))
+						run.WithArgument(args);
 
 				run.Execute(false);
 

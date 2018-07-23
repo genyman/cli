@@ -146,7 +146,7 @@ namespace Genyman.Cli.Helpers
 			return exitCode == 0;
 		}
 
-		internal static (bool success, string packageId) ResolvePackage(string packageId, string source, bool autoUpdate, string specificVersion)
+		internal static (bool success, string packageId, bool specificVersionInstalled) ResolvePackage(string packageId, string source, bool autoUpdate, string specificVersion)
 		{
 			var isFullPackageId = true;
 
@@ -156,8 +156,9 @@ namespace Genyman.Cli.Helpers
 				packageId = ".genyman." + packageId;
 			}
 
-			var local = DotNetHelper.DoesPackageExists(packageId);
+			var local = DoesPackageExists(packageId);
 			var canContinue = false;
+			var specificVersionInstalled = false;
 
 			if (!local)
 			{
@@ -165,32 +166,33 @@ namespace Genyman.Cli.Helpers
 				{
 					Log.Error($"Genyman package {packageId} is not installed. Auto-installation cannot be performed as {packageId} is not a fully qualified package Id.");
 					{
-						return (false, packageId);
+						return (false, packageId, false);
 					}
 				}
 
-				canContinue = DotNetHelper.Install(packageId, source, null);
+				canContinue = Install(packageId, source, null);
 			}
 			else
 			{
 				// perform update, we need full package name
-				var latest = DotNetHelper.GetLastestPackageVersion(packageId);
+				var latest = GetLastestPackageVersion(packageId);
 				packageId = latest.packageId; // always get full packageId here
 
 				canContinue = latest.success;
 
 				if (canContinue && isFullPackageId && autoUpdate)
-					DotNetHelper.Update(packageId, source);
+					Update(packageId, source);
 
 				if (!string.IsNullOrEmpty(specificVersion) && latest.version != specificVersion)
 				{
 					// uninstall & install
 					UnInstall(packageId);
-					canContinue = DotNetHelper.Install(packageId, source, specificVersion);
+					canContinue = Install(packageId, source, specificVersion);
+					specificVersionInstalled = true;
 				}
 			}
 
-			return (canContinue, packageId);
+			return (canContinue, packageId, specificVersionInstalled);
 		}
 
 		internal static string GetPackageId(string nupkgFile)
