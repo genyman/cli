@@ -180,15 +180,17 @@ namespace Genyman.Cli.Helpers
 
 				canContinue = latest.success;
 
-				if (canContinue && isFullPackageId && autoUpdate)
-					Update(packageId, source);
-
 				if (!string.IsNullOrEmpty(specificVersion) && latest.version != specificVersion)
 				{
 					// uninstall & install
 					UnInstall(packageId);
 					canContinue = Install(packageId, source, specificVersion);
 					specificVersionInstalled = true;
+				}
+				else
+				{
+					if (canContinue && isFullPackageId && autoUpdate)
+						Update(packageId, source);
 				}
 			}
 

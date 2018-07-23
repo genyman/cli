@@ -22,7 +22,7 @@ namespace Genyman.Cli.Implementation
 			else
 			{
 				var packageId = ConfigurationMetadata.PackageId;
-				var resolvePackageResult = DotNetHelper.ResolvePackage(packageId, ConfigurationMetadata.NugetSource, false, ConfigurationMetadata.Version);
+				var resolvePackageResult = DotNetHelper.ResolvePackage(packageId, ConfigurationMetadata.NugetSource, true, ConfigurationMetadata.Version);
 
 				if (resolvePackageResult.success)
 				{
@@ -30,12 +30,6 @@ namespace Genyman.Cli.Implementation
 					generator.InputFileName = InputFileName;
 					generator.PackageId = resolvePackageResult.packageId;
 					generator.Execute(Args);
-
-					// in case a specific version was requested, install latest again
-					if (resolvePackageResult.specificVersionInstalled)
-					{
-						DotNetHelper.ResolvePackage(packageId, ConfigurationMetadata.NugetSource, true, null);
-					}
 				}
 			}
 		}
