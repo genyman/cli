@@ -1,24 +1,21 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Genyman.Core;
 using Genyman.Core.Helpers;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.DotNet.Configurer;
-using ServiceStack;
 
 namespace Genyman.Cli.Helpers
 {
 	internal static class DotNetHelper
 	{
-		static string DotnetCommand { get; }
-		static string DotnetStore { get; }
-
 		static DotNetHelper()
 		{
 			DotnetCommand = DotNetExe.FullPathOrDefault();
 		}
+
+		static string DotnetCommand { get; }
 
 		internal static void Pack(string tempFolder)
 		{
@@ -30,7 +27,7 @@ namespace Genyman.Cli.Helpers
 				{
 					if (s.Contains("Successfully"))
 
-						Log.Information($"Packing was successfull");
+						Log.Information("Packing was successfull");
 
 					return true;
 				})
@@ -45,18 +42,11 @@ namespace Genyman.Cli.Helpers
 				.WithArgument(nugetPackage);
 
 			if (!string.IsNullOrEmpty(nugetSource))
-			{
 				push.WithArgument("--source", nugetSource);
-			}
 			else
-			{
 				push.WithArgument("--source", "https://api.nuget.org/v3/index.json");
-			}
 
-			if (!string.IsNullOrEmpty(nugetApiKey))
-			{
-				push.WithArgument("--api-key", nugetApiKey);
-			}
+			if (!string.IsNullOrEmpty(nugetApiKey)) push.WithArgument("--api-key", nugetApiKey);
 
 			push.ReceiveOutput(s =>
 			{
@@ -71,9 +61,8 @@ namespace Genyman.Cli.Helpers
 		{
 			var packageId = GetPackageId(nupkgFile);
 			var version = GetPackageVersion(nupkgFile);
-			
+
 			if (DoesPackageExists(packageId))
-			{
 				ProcessRunner.Create(DotnetCommand)
 					.WithArgument("tool")
 					.WithArgument("update")
@@ -86,11 +75,7 @@ namespace Genyman.Cli.Helpers
 						return true;
 					})
 					.Execute();
-			}
 			else
-			{
-				// if not- install with specific version
-				// dotnet tool install -g --add-source /Users/stefan/Sources/Github/cbl/Genyman.IOSDeviceIdentifiers/src/bin/Debug CaveBirdLabs.Genyman.IOSDeviceIdentifiers --version 0.0.1
 				ProcessRunner.Create(DotnetCommand)
 					.WithArgument("tool")
 					.WithArgument("install")
@@ -104,27 +89,90 @@ namespace Genyman.Cli.Helpers
 						return true;
 					})
 					.Execute();
-			}
 		}
 
-		static string GetPackageId(string nupkgFile)
+		internal static bool Install(string packageId, string source)
+		{
+			var install = ProcessRunner.Create(DotnetCommand)
+				.WithArgument("tool")
+				.WithArgument("install")
+				.WithArgument("-g")
+				.WithArgument(packageId)
+				.ReceiveOutput(s =>
+				{
+					Log.Information(s);
+					return true;
+				});
+
+			if (!string.IsNullOrEmpty(source))
+				install.WithArgument("--add-source", source);
+
+			var exitCode = install.Execute();
+			return exitCode == 0;
+		}
+
+		internal static bool Update(string packageId, string source)
+		{
+			var update = ProcessRunner.Create(DotnetCommand)
+				.WithArgument("tool")
+				.WithArgument("update")
+				.WithArgument("-g")
+				.WithArgument(packageId)
+				.ReceiveOutput(s =>
+				{
+					Log.Information(s);
+					return true;
+				});
+
+			if (!string.IsNullOrEmpty(source))
+				update.WithArgument("--add-source", source);
+
+			var exitCode = update.Execute();
+			return exitCode == 0;
+		}
+
+		internal static string GetPackageId(string nupkgFile)
 		{
 			return string.Join(".", Path.GetFileNameWithoutExtension(nupkgFile).Split('.').Take(3));
 		}
 
-		static string GetPackageVersion(string nupkgFile)
+		internal static string GetPackageVersion(string nupkgFile)
 		{
 			return string.Join(".", Path.GetFileNameWithoutExtension(nupkgFile).Split('.').TakeLast(3));
 		}
 
-
-		static bool DoesPackageExists(string packageId)
+		internal static bool DoesPackageExists(string packageId)
 		{
-			var folder = CliFolderPathCalculator.ToolsPackagePath;
 			var packageFolders = Directory.EnumerateDirectories(CliFolderPathCalculator.ToolsPackagePath);
-			
+			// check upon ending - if packageId is not complete
 			var foundPackage = packageFolders.FirstOrDefault(f => f.ToLower().EndsWith(packageId.ToLower()));
 			return foundPackage != null;
+		}
+
+		internal static (bool success, string packageId, string version) GetLastestPackageVersion(string packageId)
+		{
+			var packageFolders = Directory.EnumerateDirectories(CliFolderPathCalculator.ToolsPackagePath);
+			var foundPackage = packageFolders.FirstOrDefault(f => f.ToLower().EndsWith(packageId.ToLower()));
+			var subFolders = Directory.EnumerateDirectories(foundPackage, "*.*", SearchOption.TopDirectoryOnly);
+
+			var foundPackageId = new DirectoryInfo(foundPackage).Name;
+			var highestVersion = "0.0.0";
+			var success = true;
+
+			foreach (var subFolder in subFolders)
+				try
+				{
+					var version = new DirectoryInfo(subFolder);
+					if (new Version(version.Name) > new Version(highestVersion)) highestVersion = version.Name;
+				}
+				catch (Exception e)
+				{
+					Log.Debug($"Could not parse version for {subFolder} folder");
+				}
+
+			if (highestVersion == "0.0.0") success = false;
+
+			return (success, foundPackageId, highestVersion);
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using Genyman.Core;
+﻿using System.IO;
+using Genyman.Core;
 
 namespace Genyman.Cli.Implementation
 {
@@ -8,10 +9,13 @@ namespace Genyman.Cli.Implementation
 		{
 			if (ConfigurationMetadata.PackageId == Metadata.PackageId)
 			{
-				CreateTemplate();
+				// create NEW Genyman configuration file
+				Log.Information($"Generating a new genyman generator solution");
+				ProcessHandlebarTemplates();
 			}
 			else
 			{
+				
 				// todo:
 				// - try to resolve packageId
 				// - execute package id with same json file
@@ -26,10 +30,5 @@ namespace Genyman.Cli.Implementation
 			}
 		}
 
-		void CreateTemplate()
-		{
-			Log.Information($"Generating a new genyman generator solution");
-			ProcessHandlebarTemplates();
-		}
 	}
 }

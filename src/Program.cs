@@ -8,10 +8,8 @@ namespace Genyman.Cli
 	{
 		public static void Main(string[] args)
 		{
-			GenymanApplication.Run<Configuration, NewTemplate, Generator>(args, subcommands =>
-			{
-				subcommands.Add(new DeployCommand());
-			});
+			GenymanApplication.Run<Configuration, NewTemplate, Generator>(args,
+				subcommands => { subcommands.Add(new DeployCommand()); }, () => NewPackageIdCommand.Run(args));
 		}
 	}
 }
