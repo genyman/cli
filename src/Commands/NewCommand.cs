@@ -1,8 +1,10 @@
+using System.IO;
 using Genyman.Cli.Helpers;
 using Genyman.Core;
 using Genyman.Core.Commands;
 using Genyman.Core.Helpers;
 using McMaster.Extensions.CommandLineUtils;
+using Microsoft.DotNet.Configurer;
 
 namespace Genyman.Cli.Commands
 {
@@ -29,6 +31,7 @@ namespace Genyman.Cli.Commands
 				var program = resolvePackageResult.packageId;
 
 				var run = ProcessRunner.Create(program)
+					.WithPathEnvironmentVariable(CliFolderPathCalculator.ToolsPackagePath)
 					.IsGenerator()
 					.WithArgument("new");
 
@@ -42,7 +45,5 @@ namespace Genyman.Cli.Commands
 			Log.Error("Could not execute new command for this packageId.");
 			return -1;
 		}
-
-		
 	}
 }

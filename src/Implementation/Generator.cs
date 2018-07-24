@@ -4,6 +4,7 @@ using Genyman.Core;
 using Genyman.Core.Commands;
 using Genyman.Core.Helpers;
 using McMaster.Extensions.CommandLineUtils;
+using Microsoft.DotNet.Configurer;
 
 namespace Genyman.Cli.Implementation
 {
@@ -41,6 +42,7 @@ namespace Genyman.Cli.Implementation
 				var program = PackageId;
 
 				var run = ProcessRunner.Create(program)
+					.WithPathEnvironmentVariable(CliFolderPathCalculator.ToolsPackagePath)
 					.IsGenerator()
 					.WithArgument(InputFileName);
 
