@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Runtime.InteropServices;
 using Genyman.Cli.Helpers;
 using Genyman.Core;
 using Genyman.Core.Commands;
@@ -39,10 +40,11 @@ namespace Genyman.Cli.Implementation
 		{
 			protected override int Execute()
 			{
-				var program = PackageId;
+				var program = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+					? Path.Combine(CliFolderPathCalculator.ToolsShimPath, PackageId)
+					: PackageId;
 
 				var run = ProcessRunner.Create(program)
-					.WithPathEnvironmentVariable(CliFolderPathCalculator.ToolsShimPath)
 					.IsGenerator()
 					.WithArgument(InputFileName);
 

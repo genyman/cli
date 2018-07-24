@@ -1,4 +1,5 @@
 using System.IO;
+using System.Runtime.InteropServices;
 using Genyman.Cli.Helpers;
 using Genyman.Core;
 using Genyman.Core.Commands;
@@ -28,10 +29,11 @@ namespace Genyman.Cli.Commands
 
 			if (resolvePackageResult.success)
 			{
-				var program = resolvePackageResult.packageId;
+				var program = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+					? Path.Combine(CliFolderPathCalculator.ToolsShimPath, resolvePackageResult.packageId)
+					: resolvePackageResult.packageId;
 
 				var run = ProcessRunner.Create(program)
-					.WithPathEnvironmentVariable(CliFolderPathCalculator.ToolsShimPath)
 					.IsGenerator()
 					.WithArgument("new");
 
