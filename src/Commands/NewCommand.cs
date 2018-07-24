@@ -31,7 +31,7 @@ namespace Genyman.Cli.Commands
 				var program = resolvePackageResult.packageId;
 
 				var run = ProcessRunner.Create(program)
-					.WithPathEnvironmentVariable(CliFolderPathCalculator.ToolsPackagePath)
+					.WithPathEnvironmentVariable(CliFolderPathCalculator.ToolsShimPath)
 					.IsGenerator()
 					.WithArgument("new");
 

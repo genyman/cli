@@ -42,7 +42,7 @@ namespace Genyman.Cli.Implementation
 				var program = PackageId;
 
 				var run = ProcessRunner.Create(program)
-					.WithPathEnvironmentVariable(CliFolderPathCalculator.ToolsPackagePath)
+					.WithPathEnvironmentVariable(CliFolderPathCalculator.ToolsShimPath)
 					.IsGenerator()
 					.WithArgument(InputFileName);
 
