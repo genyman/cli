@@ -22,7 +22,7 @@ namespace Genyman.Cli.Implementation
 			else
 			{
 				var packageId = ConfigurationMetadata.PackageId;
-				var resolvePackageResult = DotNetHelper.ResolvePackage(packageId, ConfigurationMetadata.NugetSource, true, ConfigurationMetadata.Version);
+				var resolvePackageResult = DotNetHelper.ResolvePackage(packageId, ConfigurationMetadata.NugetSource, Update, ConfigurationMetadata.Version);
 
 				if (resolvePackageResult.success)
 				{

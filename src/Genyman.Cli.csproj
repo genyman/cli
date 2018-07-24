@@ -23,11 +23,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Genyman.Core" Version="0.0.16" />
+	  <PackageReference Include="Genyman.Core" Version="0.0.18" />
 	</ItemGroup>
-
-	<!--<ItemGroup>-->
-	  <!--<ProjectReference Include="..\..\core\src\Genyman.Core.csproj" />-->
-	<!--</ItemGroup>-->
 
 </Project>

@@ -10,7 +10,12 @@ namespace Genyman.Cli
 		{
 			Generator.Args = args;
 			GenymanApplication.Run<Configuration, NewTemplate, Generator>(args,
-				subcommands => { subcommands.Add(new DeployCommand()); }, 
+				true,
+				subcommands =>
+				{
+					subcommands.Add(new DeployCommand());
+					subcommands.Add(new AllCommand());
+				}, 
 				() => NewPackageIdCommand.Run(args));
 		}
 	}
