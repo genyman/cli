@@ -8,7 +8,7 @@ using McMaster.Extensions.CommandLineUtils;
 
 namespace Genyman.Cli.Commands
 {
-	public class AllCommand : BaseCommand
+	internal class AllCommand : BaseCommand
 	{
 		public AllCommand()
 		{

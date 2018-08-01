@@ -8,7 +8,7 @@ using Microsoft.DotNet.Configurer;
 
 namespace Genyman.Cli.Implementation
 {
-	public class Generator : GenymanGenerator<Configuration>
+	internal class Generator : GenymanGenerator<Configuration>
 	{
 		internal static string[] Args { get; set; }
 

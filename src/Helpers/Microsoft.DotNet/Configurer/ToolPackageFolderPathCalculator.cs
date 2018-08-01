@@ -5,7 +5,7 @@ using System.IO;
 
 namespace Microsoft.DotNet.Configurer
 {
-	public static class ToolPackageFolderPathCalculator
+	internal static class ToolPackageFolderPathCalculator
 	{
 		private const string NestedToolPackageFolderName = ".store";
 		public static string GetToolPackageFolderPath(string toolsShimPath)

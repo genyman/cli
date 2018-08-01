@@ -8,7 +8,7 @@ using Genyman.Core;
 
 namespace Microsoft.DotNet.Configurer
 {
-    public static class CliFolderPathCalculator
+    internal static class CliFolderPathCalculator
     {
         public const string DotnetHomeVariableName = "DOTNET_CLI_HOME";
         private const string DotnetProfileDirectoryName = ".dotnet";

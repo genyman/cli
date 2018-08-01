@@ -2,7 +2,7 @@ using System;
 
 namespace Microsoft.DotNet.Configurer
 {
-	public struct BashPathUnderHomeDirectory
+	internal struct BashPathUnderHomeDirectory
 	{
 		private readonly string _fullHomeDirectoryPath;
 		private readonly string _pathRelativeToHome;

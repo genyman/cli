@@ -11,7 +11,7 @@ using ServiceStack;
 
 namespace Genyman.Cli.Commands
 {
-	public class DeployCommand : BaseCommand
+	internal class DeployCommand : BaseCommand
 	{
 		public DeployCommand()
 		{

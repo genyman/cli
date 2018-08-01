@@ -6,11 +6,12 @@
 		<ToolCommandName>genyman</ToolCommandName>
 		<TargetFramework>netcoreapp2.1</TargetFramework>
 		<AssemblyName>Genyman</AssemblyName>
-		<Version>0.0.9</Version>
+		<Version>0.0.10</Version>
 		<Description>Genyman CLI - Code Generator Tool</Description>
 		<PackageTags>Genyman</PackageTags>
 		<IncludeContentInPack>false</IncludeContentInPack>
 		<PackageIconUrl>https://raw.githubusercontent.com/genyman/genyman/master/graphics/genyman64.png</PackageIconUrl>
+		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -23,7 +24,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Genyman.Core" Version="0.0.22" />
+	  <PackageReference Include="Genyman.Core" Version="0.0.23" />
 	</ItemGroup>
 
 </Project>
