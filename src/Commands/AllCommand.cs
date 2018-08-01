@@ -42,7 +42,7 @@ namespace Genyman.Cli.Commands
 					Directory.SetCurrentDirectory(fileInfo.DirectoryName);
 					
 					GenymanApplication.Run<Configuration, NewTemplate, Generator>(args.ToArray(), true,
-						subcommands => { }, null);
+						subcommands => { });
 				}
 			}
 			Directory.SetCurrentDirectory(currentWorkingDirectory);

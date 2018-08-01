@@ -15,8 +15,7 @@ namespace Genyman.Cli
 				{
 					subcommands.Add(new DeployCommand());
 					subcommands.Add(new AllCommand());
-				}, 
-				() => NewPackageIdCommand.Run(args));
+				});
 		}
 	}
 }

@@ -1,42 +1,33 @@
 ﻿using System;
+using System.Collections.Generic;
 using Genyman.Core;
 
 namespace Genyman.Cli.Implementation
 {
-	/// <summary>
-	/// Genyman New Configuration
-	/// </summary>
+	[Documentation(Remarks = "Full details can be found at https://github.com/genyman/cli")]
 	public class Configuration
 	{
-		/// <summary>
-		/// The prefix of your Genyman package; your name, company, identifier for Nuget
-		/// </summary>
+		[Description("The prefix of your Genyman package; your name, company, identifier for Nuget")]
+		[Required]
 		public string Prefix { get; set; }
-		
-		/// <summary>
-		/// The name of the tool
-		/// </summary>
-		public string ToolName { get; set; }
-		
-		/// <summary>
-		/// A description of what the tool does
-		/// </summary>
-		public string Description { get; set; }
 
-#pragma warning disable 1591
+		[Description("The name of the tool")]
+		[Required]
+		public string ToolName { get; set; }
+
+		[Description("A description of what the tool does")]
+		[Required]
+		public string Description { get; set; }
 
 		readonly Guid _projectGuid = Guid.NewGuid();
 
-		[GenymanIgnore]
+		[Ignore]
 		public string ProjectGuid => $"{{{_projectGuid.ToString().ToUpper()}}}";
 
-		[GenymanIgnore]
+		[Ignore]
 		public string SafePrefix => Prefix.Replace(" ", ""); //todo: can be better
-		
-		[GenymanIgnore]
-		public string SafeToolName => ToolName.Replace(" ", "");
-		
-#pragma warning restore 1591
 
+		[Ignore]
+		public string SafeToolName => ToolName.Replace(" ", "");
 	}
 }

@@ -1,13 +1,10 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using Genyman.Cli.Helpers;
 using Genyman.Core;
 using Genyman.Core.Commands;
 using Genyman.Core.Helpers;
 using McMaster.Extensions.CommandLineUtils;
-using ServiceStack;
 
 namespace Genyman.Cli.Commands
 {
@@ -33,8 +30,8 @@ namespace Genyman.Cli.Commands
 			Log.Debug($"Creating temp folder {tempFolder}");
 			Directory.CreateDirectory(tempFolder);
 
-			Log.Information($"Packing generator...");
-			DotNetHelper.Pack(tempFolder);
+			Log.Information("Packing generator...");
+			DotNetRunner.Pack(tempFolder);
 
 			var nupkg = Directory.GetFiles(tempFolder, "*.nupkg").FirstOrDefault();
 			var nupkgFile = new FileInfo(nupkg).Name;
@@ -57,12 +54,12 @@ namespace Genyman.Cli.Commands
 				apiKey = ApiKeyOption.ParsedValue;
 			}
 
-			var nugetPush = DotNetHelper.NugetPush(nupkg, source, apiKey);
+			var nugetPush = DotNetRunner.NugetPush(nupkg, source, apiKey);
 
 			if (nugetPush == 0)
 			{
 				Log.Information("Package was pushed");
-				DotNetHelper.InstallOrUpdateLocal(nupkgFile, tempFolder);
+				DotNetRunner.InstallOrUpdateLocal(nupkgFile, tempFolder);
 				Log.Information("Genyman generator was installed locally");
 			}
 			else

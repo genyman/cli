@@ -1,10 +1,8 @@
 ﻿using System.IO;
 using System.Runtime.InteropServices;
-using Genyman.Cli.Helpers;
 using Genyman.Core;
 using Genyman.Core.Commands;
 using Genyman.Core.Helpers;
-using Microsoft.DotNet.Configurer;
 
 namespace Genyman.Cli.Implementation
 {
@@ -23,7 +21,7 @@ namespace Genyman.Cli.Implementation
 			else
 			{
 				var packageId = ConfigurationMetadata.PackageId;
-				var resolvePackageResult = DotNetHelper.ResolvePackage(packageId, ConfigurationMetadata.NugetSource, Update, ConfigurationMetadata.Version);
+				var resolvePackageResult = DotNetRunner.ResolvePackage(packageId, ConfigurationMetadata.NugetSource, Update, ConfigurationMetadata.Version);
 
 				if (resolvePackageResult.success)
 				{
@@ -43,7 +41,7 @@ namespace Genyman.Cli.Implementation
 			protected override int Execute()
 			{
 				var program = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-					? Path.Combine(CliFolderPathCalculator.ToolsShimPath, PackageId)
+					? Path.Combine(DotNetRunner.CliFolderPathCalculator.ToolsShimPath, PackageId)
 					: PackageId;
 
 				var run = ProcessRunner.Create(program)

@@ -11,7 +11,6 @@
 		<PackageTags>Genyman</PackageTags>
 		<IncludeContentInPack>false</IncludeContentInPack>
 		<PackageIconUrl>https://raw.githubusercontent.com/genyman/genyman/master/graphics/genyman64.png</PackageIconUrl>
-		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -19,12 +18,11 @@
 		<Content Include="Templates\**">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
-		<Folder Include="Helpers\Microsoft.DotNet" />
 		<Folder Include="Templates" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Genyman.Core" Version="0.0.23" />
+	  <PackageReference Include="Genyman.Core" Version="0.0.25" />
 	</ItemGroup>
 
 </Project>
