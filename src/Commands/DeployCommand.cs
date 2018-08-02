@@ -46,7 +46,7 @@ namespace Genyman.Cli.Commands
 			// increase
 			var addBuild = !(!BuildOption.HasValue() && (MajorOption.HasValue() || MinorOption.HasValue()));
 			FluentMSBuild.Use(csproj).IncrementVersion(MajorOption.HasValue(), MinorOption.HasValue(), addBuild);
-
+			
 			// Creating temporary folder
 			var tempFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
 			Log.Debug($"Creating temp folder {tempFolder}");
@@ -64,16 +64,16 @@ namespace Genyman.Cli.Commands
 
 			if (SourceOption.HasValue())
 			{
-				if (string.IsNullOrEmpty(SourceOption.Value()))
+				source = SourceOption.ParsedValue.FromEnvironmentOrDefault();
+				if (string.IsNullOrEmpty(source))
 					Log.Fatal("When specifying --source your need to add a valid source (--source https://{YourUrl})");
-				source = SourceOption.ParsedValue;
 			}
 
 			if (ApiKeyOption.HasValue())
 			{
-				if (string.IsNullOrEmpty(ApiKeyOption.Value()))
+				apiKey = ApiKeyOption.ParsedValue.FromEnvironmentOrDefault();
+				if (string.IsNullOrEmpty(apiKey))
 					Log.Fatal("When specifying --apikey your need to add a valid api key (--apikey YourKey");
-				apiKey = ApiKeyOption.ParsedValue;
 			}
 
 			var nugetPush = DotNetRunner.NugetPush(nupkg, source, apiKey);
