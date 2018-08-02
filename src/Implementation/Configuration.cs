@@ -4,7 +4,7 @@ using Genyman.Core;
 
 namespace Genyman.Cli.Implementation
 {
-	[Documentation(Remarks = "Full details can be found at https://github.com/genyman/cli")]
+	[Documentation(Source = "https://github.com/genyman/cli")]
 	public class Configuration
 	{
 		[Description("The prefix of your Genyman package; your name, company, identifier for Nuget")]
