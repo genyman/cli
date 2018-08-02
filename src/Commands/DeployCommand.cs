@@ -4,6 +4,7 @@ using System.Linq;
 using Genyman.Core;
 using Genyman.Core.Commands;
 using Genyman.Core.Helpers;
+using Genyman.Core.MSBuild;
 using McMaster.Extensions.CommandLineUtils;
 
 namespace Genyman.Cli.Commands
@@ -16,14 +17,35 @@ namespace Genyman.Cli.Commands
 			Description = "Deploys the generator";
 			SourceOption = Option<string>("--source", "Deploys to custom nuget server", CommandOptionType.SingleValue, option => { }, false);
 			ApiKeyOption = Option<string>("--apikey", "Use ApiKey to deploy to nuget server", CommandOptionType.SingleValue, option => { }, false);
+			
+			MajorOption = Option("--major", "Increase Major part of version", CommandOptionType.NoValue, option => { }, false);
+			MinorOption = Option("--minor", "Increase Minor part of version", CommandOptionType.NoValue, option => { }, false);
+			BuildOption = Option("--build", "Increase Build part of version (default)", CommandOptionType.NoValue, option => { }, false);
+
 		}
 
 		public CommandOption<string> SourceOption { get; }
 		public CommandOption<string> ApiKeyOption { get; }
+		
+		public CommandOption MajorOption { get; }
+		public CommandOption MinorOption { get; }
+		public CommandOption BuildOption { get; }
+
 
 		protected override int Execute()
 		{
 			base.Execute();
+			
+			// find csproj
+			var csproj = Directory.GetFiles(WorkingDirectory, "*.csproj", SearchOption.AllDirectories).FirstOrDefault();
+			if (csproj == null)
+			{
+				Log.Fatal($"Could not find .csproj in underlying folders of {WorkingDirectory}");
+			}
+
+			// increase
+			var addBuild = !(!BuildOption.HasValue() && (MajorOption.HasValue() || MinorOption.HasValue()));
+			FluentMSBuild.Use(csproj).IncrementVersion(MajorOption.HasValue(), MinorOption.HasValue(), addBuild);
 
 			// Creating temporary folder
 			var tempFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
